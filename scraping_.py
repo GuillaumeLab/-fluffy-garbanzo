@@ -16,12 +16,10 @@ def generate_delay():
     mean = 4
     sigma = 0.8
     return np.random.normal(mean,sigma,1)[0]
-
 time.sleep(generate_delay())
 time.sleep(generate_delay())
 time.sleep(generate_delay())
 time.sleep(generate_delay())
-
 
 import time
 from random import choice as rchoice
@@ -38,10 +36,15 @@ keyword="data OR developeur"
 
 actions = ActionChains(browser)
 def loop(choice,count):
-    count += 1
+    """Input
+    Parameter:
+    Parameter:
+    Output
+    """
+    #count += 1
     pages2 = "&start="+str(pagination.counter)+"0"
     browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+"&l="+str(choice)+str(pages2))
-    randompage = [19]#randompage is a random number to state the number of links openened per city
+    randompage = [17]#randompage is a random number to state the number of links openened per city
     number = [i for i in range(random.choice(randompage))] #number also decide of the number of iterations
     time.sleep(generate_delay())
     linkswith_duplicates = browser.find_elements_by_xpath("//a[%s]" % condition)
@@ -66,7 +69,11 @@ def loop(choice,count):
 
 #Def de la fonction pour écrire le texte dans le field recherche
 def pagination(choice,count):
-    """entree : il prend count en entrée. Count est une variable qui prend qiu est égale sortie """
+    """Input
+    Parameter:
+    Parameter:
+    Output
+    """
     time.sleep(generate_delay())
     pagination.counter += 1
     print("counter pagination!"+str(pagination.counter))
@@ -86,6 +93,11 @@ def pagination(choice,count):
     
 
 def switch_city(count):
+    """Input
+    Parameter:
+    Parameter:
+    Output
+    """
     count = 0 #reset the var count to 0 
     choice = random.choice(city)#choice prend un le nom d'une ville dans la liste de villes 
     time.sleep(generate_delay())
@@ -96,6 +108,11 @@ def switch_city(count):
 
 #Def de la fonction scraping
 def scraping_(i,choice,pages2):
+    """Input
+    Parameter:
+    Parameter:
+    Output
+    """ 
     time.sleep(generate_delay())
     links = browser.find_elements_by_class_name('jobtitle')
     try:
@@ -120,28 +137,42 @@ def scraping_(i,choice,pages2):
         print("could not click on the link")
         time.sleep(generate_delay())
         pass
-    linked = links[i].text
+    try:
+        linked = links[i].text
+    except:
+        print("could not click on the link")
+        linked="None"
+        time.sleep(generate_delay())
+        pass
     time.sleep(generate_delay())
     try:
         Title = browser.find_element_by_xpath('//*[@id="vjs-header-jobinfo"]')
     except:
         print("could not fetch header")
+        time.sleep(generate_delay())
+        Title="None"
         pass
+    
     try:
         Company = browser.find_element_by_xpath('//*[@id="vjs-cn"]')
     except:
         print("could not fetch company")
+        Company = "None"
         pass
+        
     try:
         Location = browser.find_element_by_xpath('//*[@id="vjs-loc"]')
     except:
         print("could not fetch location")
+        Location = "None"
         pass
     try:
         Details = browser.find_element_by_xpath('//*[@id="vjs-content"]')
     except:
         print("could not fetch role description")
+        Details = "None"
         pass
+    
     time.sleep(generate_delay())
     df_indeed.loc[scraping_.counter]=[Title.text,Details.text,linked,Company.text,Location.text]
     df_indeed.to_csv('df_indeed2.csv', index=False, header=True)
@@ -153,6 +184,11 @@ def scraping_(i,choice,pages2):
 
     
 def main():
+    """Input
+    Parameter:
+    Parameter:
+    Output
+    """ 
     scraping_.counter = 0
     pagination.counter = 0
     while pages2 != "&start="+str(99)+"0":
