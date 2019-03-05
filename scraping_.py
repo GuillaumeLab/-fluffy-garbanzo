@@ -75,11 +75,11 @@ def loop(choice,count,pages2):
     #count += 1
     pages2 = "&start="+str(pagination.counter)+"0"
     browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+"&l="+str(choice)+str(pages2))
-    randompage = [17]#randompage is a random number to state the number of links openened per city
+    links = browser.find_elements_by_class_name('jobtitle')
+    randompage = [len(links)]#randompage is a random number to state the number
     number = [i for i in range(random.choice(randompage))] #number also decide of the number of iterations
     time.sleep(generate_delay())
     linkswith_duplicates = browser.find_elements_by_xpath("//a[%s]" % condition)
-    links = browser.find_elements_by_class_name('jobtitle')
     for i in range(len(links)):
         while number != []:
             choice_num = random.choice(number)#choice_num prend un le nom d'une numbre entre 0 et 15 pour éviter d'ouvrir les pages l'une après l'autre
@@ -137,7 +137,7 @@ def scraping_(i,choice,pages2):
         pass
     time.sleep(generate_delay())
     links = browser.find_elements_by_class_name('jobtitle')
-    print(links[i].text)
+    #print(links[i].text)
     try:
         links[i].click()
     except:
