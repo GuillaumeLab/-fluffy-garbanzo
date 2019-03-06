@@ -34,9 +34,9 @@ city = ["Lyon","Toulouse","Nantes","Bordeaux"]
 words = ["clk"]
 count=0
 condition = " or ".join("contains(@href, '%s')" % word for word in words)
-choice = "île de france"
+choice = "paris"
 keyword="Data"
-estimated = "€50%C2%A0000"
+estimated = " €30%C2%A0000"
 actions = ActionChains(browser)
 
 #Def de la fonction pour écrire le texte dans le field recherche
@@ -54,7 +54,7 @@ def pagination(choice,count,pages2):
     while count<99:
         count += 1
         try:
-            browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+" €50%C2%A0000&l="+str(choice)+str(pages2))
+            browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+str(choice)+str(pages2))
             print(choice)
         except:
             browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+"&l="+str(choice)+str(pages2))
@@ -132,7 +132,7 @@ def scraping_(i,choice,pages2):
         links[i].click()
     except:
         print("could not click on the link")
-        browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+" €50%C2%A0000&l="+str(choice)+str(pages2))
+        browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+str(choice)+str(pages2))
         time.sleep(generate_delay())
         pass
     time.sleep(generate_delay())
