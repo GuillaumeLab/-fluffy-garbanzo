@@ -6,8 +6,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 browser = webdriver.Firefox()
+import numpy as np
 #browser = webdriver.Firefox(executable_path='C:/path/to/geckodriver.exe') #au cas où geckdriver.exe n'est pas dans le path ni au même endroit
-browser.get('https://www.indeed.fr/emplois?q=%22Intelligence+Artificielle%22+OR+DATA+OR+IA+OR+AI+OR+%22machine+learning%22+OR+%22donn%C3%A9e%22+OR+%22donn%C3%A9es%22+OR+BI+OR+%22intelligence%22&l=France')
+browser.get('https://www.indeed.fr/')
 browser.maximize_window()
 import numpy as np
 
@@ -22,21 +23,20 @@ def generate_delay():
     return np.random.normal(mean,sigma,1)[0]
 time.sleep(generate_delay())
 time.sleep(generate_delay())
-time.sleep(generate_delay())
-time.sleep(generate_delay())
+
 
 import time
 from random import choice as rchoice
 import random
 import pandas as pd 
-df_indeed = pd.DataFrame({'Title' : [],'Details' : [],'Link' : [],'Company' : [],'Location' : []})
+df_indeed = pd.DataFrame({'Title' : [],'Details' : [],'Link' : [],'Company' : [],'Location' : [],'Estimated Salary' : []})
 city = ["Lyon","Toulouse","Nantes","Bordeaux"]
 words = ["clk"]
 count=0
 condition = " or ".join("contains(@href, '%s')" % word for word in words)
 choice = "île de france"
-keyword="Business Intelligence"
-
+keyword="Data"
+estimated = "€50%C2%A0000"
 actions = ActionChains(browser)
 
 #Def de la fonction pour écrire le texte dans le field recherche
@@ -54,7 +54,7 @@ def pagination(choice,count,pages2):
     while count<99:
         count += 1
         try:
-            browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+"&l="+str(choice)+str(pages2))
+            browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+" €50%C2%A0000&l="+str(choice)+str(pages2))
             print(choice)
         except:
             browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+"&l="+str(choice)+str(pages2))
@@ -132,7 +132,7 @@ def scraping_(i,choice,pages2):
         links[i].click()
     except:
         print("could not click on the link")
-        browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+"&l="+str(choice)+str(pages2))
+        browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+" €50%C2%A0000&l="+str(choice)+str(pages2))
         time.sleep(generate_delay())
         pass
     time.sleep(generate_delay())
@@ -148,7 +148,7 @@ def scraping_(i,choice,pages2):
         linked = links[i].text
     except:
         print("could not click on the link")
-        linked="None"
+        linked=np.nan
         time.sleep(generate_delay())
         pass
     time.sleep(generate_delay())
@@ -157,31 +157,31 @@ def scraping_(i,choice,pages2):
     except:
         print("could not fetch header")
         time.sleep(generate_delay())
-        Title="None"
+        Title=np.nan
         pass
     
     try:
         Company = browser.find_element_by_xpath('//*[@id="vjs-cn"]').text
     except:
         print("could not fetch company")
-        Company = "None"
+        Company = np.nan
         pass
         
     try:
         Location = browser.find_element_by_xpath('//*[@id="vjs-loc"]').text
     except:
         print("could not fetch location")
-        Location = "None"
+        Location = np.nan
         pass
     try:
         Details = browser.find_element_by_xpath('//*[@id="vjs-content"]').text
     except:
         print("could not fetch role description")
-        Details = "None"
+        Details = np.nan
         pass
     
     time.sleep(generate_delay())
-    df_indeed.loc[scraping_.counter]=[Title,Details,linked,Company,Location]
+    df_indeed.loc[scraping_.counter]=[Title,Details,linked,Company,Location,estimated]
     df_indeed.to_csv('df_indeed2.csv', index=False, header=True)
     print("counter"+str(scraping_.counter))
     scraping_.counter += 1
@@ -189,7 +189,7 @@ def scraping_(i,choice,pages2):
     time.sleep(generate_delay())
 
 
-    
+
 def main():
     """Input
     Parameter:
