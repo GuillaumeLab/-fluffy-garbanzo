@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 browser = webdriver.Firefox()
+import datetime
 import numpy as np
 #browser = webdriver.Firefox(executable_path='C:/path/to/geckodriver.exe') #au cas où geckdriver.exe n'est pas dans le path ni au même endroit
 browser.get('https://www.indeed.fr/')
@@ -21,22 +22,23 @@ def generate_delay():
     mean = 4
     sigma = 0.8
     return np.random.normal(mean,sigma,1)[0]
+
+browser.set_window_size("3024", "3024")
 time.sleep(generate_delay())
 time.sleep(generate_delay())
-
-
+timestamp = datetime.datetime.today().strftime('%Y-%m-%d')
 import time
 from random import choice as rchoice
 import random
 import pandas as pd 
-df_indeed = pd.DataFrame({'Title' : [],'Details' : [],'Link' : [],'Company' : [],'Location' : [],'Estimated Salary' : []})
+df_indeed = pd.DataFrame({'Title' : [],'Details' : [],'Link' : [],'Company' : [],'Location' : [],'Estimated Salary' : [],'date' : [],'timestamp' : []})
 city = ["Lyon","Toulouse","Nantes","Bordeaux"]
 words = ["clk"]
 count=0
 condition = " or ".join("contains(@href, '%s')" % word for word in words)
-choice = "paris"
+choice = "île de france"
 keyword="Data"
-estimated = " €30%C2%A0000"
+estimated = " €40%C2%A0000"
 actions = ActionChains(browser)
 
 #Def de la fonction pour écrire le texte dans le field recherche
@@ -54,10 +56,10 @@ def pagination(choice,count,pages2):
     while count<99:
         count += 1
         try:
-            browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+str(choice)+str(pages2))
+            browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2))
             print(choice)
         except:
-            browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+"&l="+str(choice)+str(pages2))
+            browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2))
             print("error on pagination function")
             time.sleep(generate_delay())
         loop(choice,count,pages2)   #repart sur la fonction initiale
@@ -74,7 +76,7 @@ def loop(choice,count,pages2):
     """
     #count += 1
     pages2 = "&start="+str(pagination.counter)+"0"
-    browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+"&l="+str(choice)+str(pages2))
+    browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2))
     links = browser.find_elements_by_class_name('jobtitle')
     randompage = [len(links)]#randompage is a random number to state the number
     number = [i for i in range(random.choice(randompage))] #number also decide of the number of iterations
@@ -121,6 +123,7 @@ def scraping_(i,choice,pages2):
     Output
     """ 
     time.sleep(generate_delay())
+    browser.set_window_size("3024", "3024")
     links = browser.find_elements_by_class_name('jobtitle')
     try:
         browser.execute_script("arguments[0].scrollIntoView();", links[i])
@@ -132,7 +135,7 @@ def scraping_(i,choice,pages2):
         links[i].click()
     except:
         print("could not click on the link")
-        browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+str(choice)+str(pages2))
+        browser.get("https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2))
         time.sleep(generate_delay())
         pass
     time.sleep(generate_delay())
@@ -152,6 +155,13 @@ def scraping_(i,choice,pages2):
         time.sleep(generate_delay())
         pass
     time.sleep(generate_delay())
+    try:
+        Date = browser.find_element_by_class_name('date').text
+    except:
+        print("could not fetch header")
+        time.sleep(generate_delay())
+        Date=np.nan
+        pass
     try:
         Title = browser.find_element_by_xpath('//*[@id="vjs-header-jobinfo"]').text
     except:
@@ -181,8 +191,8 @@ def scraping_(i,choice,pages2):
         pass
     
     time.sleep(generate_delay())
-    df_indeed.loc[scraping_.counter]=[Title,Details,linked,Company,Location,estimated]
-    df_indeed.to_csv('df_indeed2.csv', index=False, header=True)
+    df_indeed.loc[scraping_.counter]=[Title,Details,linked,Company,Location,estimated,Date,timestamp]
+    df_indeed.to_csv('df_indeed13.csv', index=False, header=True)
     print("counter"+str(scraping_.counter))
     scraping_.counter += 1
     browser.back()
@@ -203,4 +213,4 @@ def main():
 
     
 
-main()   
+main()
