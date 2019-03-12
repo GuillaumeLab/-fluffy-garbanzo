@@ -29,14 +29,14 @@ def cleansal(lis):
             lis[i] = lis[i][0]
     return lis
 
-def find_salaries(df, column):
+def find_salaries(dataframe, column):
     """trouve des salaires dans la colonne et dataframe entrees en parametres
     column doit etre un string
     renvoies une liste"""
     salaries = []
     regex = r'((?:Rémunération|Gratification|Salaire|Salary)?\s?:?\s?[0-9]*(?:.|,)[0-9]*(?:.|,)[0-9]*€?\s(?:(?:to|-|à)?\s?[0-9]*(?:.|,)[0-9]*(?:.|,)[0-9]*€?\s)?\s?(?:\/|par|per)\s?(?:mois|an|year|month))'
     for i in range(len(df)):
-        l = re.findall(regex,df[column][i])
+        l = re.findall(regex,dataframe[column][i])
         salaries.append(l)
     salaries = cleansal(salaries) #on nettoie avec la fonction cleansal 
     return(salaries)
@@ -91,10 +91,10 @@ def intify_etc(sals):
 
 
 #This is my main function that uses the other functions below. 
-def add_salaries(df):
-    sals = intify_etc(find_salaries(df, 'Title'))
-    df['Salary'] = sals
-    return df
+def add_salaries(dataframe):
+    sals = intify_etc(find_salaries(dataframe, 'Title'))
+    dataframe['Salary'] = sals
+    return dataframe
 
 add_salaries(df)
 
@@ -102,3 +102,5 @@ add_salaries(df)
 nbsal = len(df) - df['Salary'].isna().sum()
 #percent of salaries
 percent = nbsal/len(df) *100
+
+ 
