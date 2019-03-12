@@ -5,7 +5,7 @@ import re
 import numpy as np
 
 annonces = pd.read_csv('annonces.csv')
-annonces.drop(['index'], axis=1, inplace=True)
+annonces.drop(['index','estimated','linked','url','_id'], axis=1, inplace=True)
 
 
 # on passe les colonnes interessantes en minuscules
@@ -101,6 +101,46 @@ def intify_etc(sals):
                     sals[i] = int(sal)*12#convert to yearly salary
     return sals
 
-# on traite les salaires : appel principal 
+# on extrait les salaires 
 s = intify_etc(trouver_salaires(annonces, 'Title'))
+# on les ajoute dans une nouvelle colonne
 annonces['Salaires'] = s
+
+
+# ajouter une colonne niveau_etude
+# annonces.loc[:, "Niveau d'études"] = ''
+
+def niveau_etudes(df):
+    # z est la regex pour extraire Bac+.., bac +..., Master
+    # qu'on va chercher dans la colonne Details
+    
+    etude=[]
+    z = re.compile(r'bac ?\+ ?\d?\/?\d?|master')
+    
+    for i in range(len(df)):
+        bac = re.findall(z,str(df['Details'][i]))
+        bac = list(set(bac))
+        etude.append(bac)
+    return(etude)
+
+# on appelle la fonction qui traite le niveau d'études
+annonces["Niveau d'études"] = niveau_etudes(annonces)
+
+#annonces["Niveau d'études"].value_counts()
+
+# on extrait les compétences spécifiques avec une regex
+def langages_pro(df):
+    # on cherche dans la colonne 'Details'
+    langage=[]
+    regex = r'(?:R|python|sql|nosql|mysql|matlab|c\+\+?|scala|ruby|php|vba|machine learning|javascript|java|hadoop|spark|mongodb\
+              |cassandra|nlp|maths|statistics|statistique|physics|physique|qlikview|sci-kit learn|pandas|numpy\
+              |excel|powerpoint|kpi|dashboard|qlikview|d3|sas|spss\
+              |api|nlp|physics)'
+    
+    for i in range(0, len(df)):
+        L = re.findall(regex,str(df['Details'][i]))
+        L = list(set(L))
+        langage.append(L)
+    return(langage)
+
+annonces["Languages"] = langages_pro(annonces)
