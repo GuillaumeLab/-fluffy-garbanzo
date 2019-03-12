@@ -38,7 +38,7 @@ def niveau_etudes(df):
     z = re.compile(r'[bB]ac ?\+ ?\d?\/?\d?|Master')
     
     for i in range(len(df)):
-        bac = re.findall(z,df['Details'][i])
+        bac = re.findall(z,str(df['Details'][i]))
         bac = list(set(bac))
         etude.append(bac)
     return(etude)
