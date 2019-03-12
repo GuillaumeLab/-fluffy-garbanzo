@@ -39,7 +39,7 @@ def langages_pro(df):
     regex = r'(?:R |python|sql|nosql|mysql|matlab|c\+\+?|scala|ruby|php|vba|machine learning|javascript|java|hadoop|spark|mongodb\
               |cassandra|nlp|maths|statistics|statistique|physics|physique|qlikview|sci-kit learn|pandas|numpy\
               |excel|powerpoint|kpi|dashboard|qlikview|d3|sas|spss\
-              |api|nlp|physics|scikit-learn|)'
+              |api|nlp|physics|scikit-learn|powerbi|angular|acess)'
    # z = re.compile(r'[bB]ac ?\+ ?\d?\/?\d?|Master')
     
     for i in range(0, len(df)):
