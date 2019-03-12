@@ -62,6 +62,6 @@ def eliminedoublons(liste):
 
 etude_sansDoublons=eliminedoublons(etude)
 
-df1["niv_etude"] = etude_sansDoublons
+df["niv_etude"] = etude_sansDoublons
 
 
