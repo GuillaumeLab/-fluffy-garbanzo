@@ -27,7 +27,7 @@ annonces['Experience'] = annonces['Experience'].str.replace("une","1").replace("
 annonces['Experience'] = annonces['Experience'].str.replace("two","2").replace("three","3").replace("four","4").replace("five","5").replace("six","6").replace("seven","7").replace("height","8").replace("nine","9").replace("ten","10").replace("fifteen","15")
 
 # la regex pour prendre tous les digits avant 'year/years/ans/an'
-annonces['Experience'] = annonces['Experience'].str.extract("([1-9]+)(?=\s(an |ans |years |year ))", expand=False)
+annonces['Experience'] = annonces['Experience'].str.extract("([1-9]+)(?=\s(an |années |année | ans |years |year ))", expand=False)
 # on transforme les strings en float
 annonces['Experience'] = annonces['Experience'].astype("float")
 # on ne garde uniquement que les chiffres en dessous de 11 (on assume qu'une entreprise ne demandera pas plus de 10 ans d'expérience dans un domaine)
