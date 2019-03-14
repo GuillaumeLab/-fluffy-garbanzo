@@ -65,3 +65,24 @@ df['Inner_City']=df['Inner_City'].replace(Inner_City,"Inner_City")#remplace les 
 df['Inner_City']=df['Inner_City'].notnull()
 df['Inner_City']*= 1
 df['Inner_City']
+
+
+
+# cette fonction permet de detecter la langue de l'offre (fr, non fr)
+
+from langdetect import detect # import langdetect
+def try_detect(cell):# fonction pour detecter la langue
+    try:
+        detected_lang = detect(cell)
+    except:
+        detected_lang = None 
+    return detected_lang
+
+# ça a pris 3 minutes pour 7000 lignes
+df['langage'] = df["Details"].apply(try_detect) # applique la fonction 
+df['langage'].loc[df['lang']=="fr"].count()  #nombre d'offre en français
+
+#binarize en fr et non fr
+df['langage']=df['langage'].loc[df['lang']=="fr"] 
+df['langage']=df['langage'].notnull()
+df['langage']*= 1
