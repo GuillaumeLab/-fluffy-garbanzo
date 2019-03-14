@@ -62,4 +62,6 @@ df['Location']=df['Location'].str.lower()#reformater la colonne location en minu
 Inner_City = ["75","bordeaux","paris","nantes","toulouse","lyon"]#definir liste de valeur qui sont théoriquement dans la ville même
 df['Inner_City']=df['Location'].str.extract("(" + "|".join(Inner_City) +")", expand=False) #extrait les valeurs en centre villes 
 df['Inner_City']=df['Inner_City'].replace(Inner_City,"Inner_City")#remplace les valeurs en centre villes
-
+df['Inner_City']=df['Inner_City'].notnull()
+df['Inner_City']*= 1
+df['Inner_City']
