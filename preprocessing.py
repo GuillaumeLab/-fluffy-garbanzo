@@ -57,7 +57,7 @@ df['Bassin_emploi']=df['url'].str.extract("(?<=&l=)(.*)(?=&start)", expand=False
 df['Bassin_emploi']= df['Bassin_emploi'].replace("%C3%AEle%20de%20france","île de france")
 df['Bassin_emploi']
 
-#le code permet une nouvelle variable appellée toulouse
+#le code permet une nouvelle variable appellée inner_city
 df['Location']=df['Location'].str.lower()#reformater la colonne location en minuscule 
 Inner_City = ["75","bordeaux","paris","nantes","toulouse","lyon"]#definir liste de valeur qui sont théoriquement dans la ville même
 df['Inner_City']=df['Location'].str.extract("(" + "|".join(Inner_City) +")", expand=False) #extrait les valeurs en centre villes 
@@ -68,7 +68,7 @@ df['Inner_City']
 
 
 
-# cette fonction permet de detecter la langue de l'offre (fr, non fr)
+# cette fonction permet de detecter la langue de l'offre (fr, not fr)
 
 from langdetect import detect # import langdetect
 def try_detect(cell):# fonction pour detecter la langue
