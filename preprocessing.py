@@ -27,17 +27,21 @@ df['Experience'] = df['Details'] #créé un nouvelle colonne Expérience à part
 df['Experience'] = df['Experience'].str.lower() #transforme la case en minuscule
 #le code suivant transforme les mots expériences, expérience (etc) en "experience"
 df['Experience'] = df['Experience'].str.replace("expérience","experience").replace("expériences","experience").replace("d'expérience","experience").replace("d'expériences","experience").replace("experiences","experience")
+#le code suivant transforme les mots expériences, expérience (etc) en "experience"
+df['Experience'] = df['Experience'].str.replace("several","2").replace("plusieurs","2").replace("plusieurs années","2").replace("several years","2")
 #le code suivant efface les mots "customer/user experience (etc) 
 df['Experience'] = df['Experience'].str.replace("customer experience","").replace("online experience","").replace("user experience","")
 #le code suivant remplace les en lettre par des digits
 df['Experience'] = df['Experience'].str.replace("une","1").replace("un","1").replace("one","1").replace("deux","2").replace("trois","3").replace("quatre","4").replace("cinq","5").replace("six","6").replace("sept","7").replace("huit","8").replace("neuf","9").replace("dix","10").replace("quinze","15")
 df['Experience'] = df['Experience'].str.replace("two","2").replace("three","3").replace("four","4").replace("five","5").replace("six","6").replace("seven","7").replace("height","8").replace("nine","9").replace("ten","10").replace("fifteen","15")
+#regex pour prendre tous lesdigits avant year. On le range dans un multiindex dataframe "s" de façon à conserver tous les matchs
+s = df['Experience'].str.extractall("([0-9]+)(?=\s(an |ans |année |années |years |year |ans\r\n|années\r\n|année\r\n|an\r\n|year\r\n|years\r\n|ans,|année,|an,|années,|years,|year;|years;|ans;|an;|année;|années;|year.|years.|ans.|an.|année.|années.))")
+s[0]=s[0].astype("float") #on transforme les str en floats 
+s[0]=s[0].loc[s[0]<11]  #on elimine les valeurs suppérieure à 10 (hypothèse : les employeurs ne prennent pas plus de 11 ans d'expérience)
+s[0]
+s=s.groupby(level=0).max() #on garde la valeur maximum ()
+df['Experience'] = s.groupby(s.index.get_level_values(0)).agg(list) #on réinsere les groupes dans le dataframe
 
-#regex pour prendre tous lesdigits avant year
-df['Experience'] = df['Experience'].str.extract("([1-9]+)(?=\s(an |ans |years |year ))", expand=False)
-df['Experience']=df['Experience'].astype("float")#transforme les strings en float
-df['Experience']=df['Experience'].loc[df['Experience']<11]#garde uniquement les chiffres en dessous de 11 (on assume que une entreprise ne demandera pas plus de 10 ans d'expérience dans un domaine)
-df['Experience']
 """ possibilité d'amélioration 
 
 df['Experience2'] = txt.str.extract("([^.?!;\r\n]*(?<=[.?\s!;\r\n])experience(?=[\s.?!;\r\n])[^.?!;\r\n]*[.?!;\r\n])", expand=False)# élimine les l'expérience supérieure à 10 ans
