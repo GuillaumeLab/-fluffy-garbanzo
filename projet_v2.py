@@ -227,7 +227,7 @@ def vraie_date(df):
 
     return df["timestamp"] - df["Date"].apply(lambda x: time_diff(x[7:].split(" "))).apply(lambda x: pd.to_timedelta(x[0], unit=x[1]))
 
-annonces["Date"] = vrai_date(annonces)
+annonces["Pub_Date"] = vrai_date(annonces)
 
 # on plot les salaires
 plt.scatter(annonces.index.values,annonces['Salaires'],color='r')
