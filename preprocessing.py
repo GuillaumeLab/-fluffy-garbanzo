@@ -28,7 +28,7 @@ df['Experience'] = df['Experience'].str.lower() #transforme la case en minuscule
 #le code suivant transforme les mots expériences, expérience (etc) en "experience"
 df['Experience'] = df['Experience'].str.replace("expérience","experience").replace("expériences","experience").replace("d'expérience","experience").replace("d'expériences","experience").replace("experiences","experience")
 #le code suivant transforme les mots expériences, expérience (etc) en "experience"
-df['Experience'] = df['Experience'].str.replace("several","2").replace("plusieurs","2").replace("plusieurs années","2").replace("several years","2")
+df['Experience'] = df['Experience'].str.replace("several","3").replace("plusieurs","2").replace("couple","2").replace("plusieurs années","2").replace("several years","2")
 #le code suivant efface les mots "customer/user experience (etc) 
 df['Experience'] = df['Experience'].str.replace("customer experience","").replace("online experience","").replace("user experience","")
 #le code suivant remplace les en lettre par des digits
