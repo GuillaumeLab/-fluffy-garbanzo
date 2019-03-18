@@ -42,6 +42,23 @@ tmp[0]=tmp[0].loc[tmp[0]<11]
 tmp=tmp.groupby(level=0).max() #on garde la valeur maximum ()
 annonces['Experience'] = tmp.groupby(tmp.index.get_level_values(0)).agg(list) #on réinsere les groupes dans le dataframe
 
+#on converti les string en nan ou float
+def replace(l):
+    """Cette fonction prends en paramètres une liste ou series qui est composé de strings (soit 'nan' ou un nombre ex. '5.0')
+    il retourne une liste avec soit des nans ou des floats
+    on peut ajouter ensuite cette liste à notre dataframe"""
+    l2 = [0 for x in range(len(l))]
+    for i in range(len(l)):
+        elt = l[i]
+        if elt == 'nan':
+            l2[i] = np.nan
+        else:
+            l2[i] = float(elt)
+    return l2
+#on applique au dataset 
+annonces['Experience'] = replace(annonces['Experience'])
+#type(annonces['Experience'][2]) #pour verifier que la fonction a fonctionnée - doit retourner un nan 
+
 # Fonction prem_exp - Une fonction qui peut aider à remplir la colonne "Experience".
 # Entrées: pd.DataFrame df
 # Actions: Rien
