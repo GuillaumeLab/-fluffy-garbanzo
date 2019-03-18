@@ -196,6 +196,39 @@ print(m)
 for i in m.index.values:
     annonces['Salaires'][i] = int(annonces['Salaires'][i]/12)
 
+# Conversion des dates publiées
+    
+# Fonction vraie_date
+# Entrées:  pd.DataFrame df
+# Actions: Rien
+# Sorties: pd.Series - la date où l'annonce a été publiée
+def vraie_date(df):
+    
+    # Première fonction pour trouver l'unité de temps après "il y a"
+    unit_dic = {"heure": "h", "jour":"d", "mois":"m"}
+    def unit_giver(jobby):
+        temp = jobby
+        for scale in unit_dic.keys():
+            if scale in temp:
+                temp = unit_dic[scale]
+        return temp
+
+    # Petite fonction pour enlever les symboles '+'
+    def plus_remover(jobby):
+        temp = jobby
+        if "+" in temp:
+            temp = temp[:-1]
+        return pd.to_numeric(temp, errors='coerce')
+
+    # Crée un tuple contenant les sorties des fonctions au-dessus pour
+    # une ligne du dataset
+    def time_diff(jobby):
+        return plus_remover(jobby[0]), unit_giver(jobby[1])
+
+    return df["timestamp"] - df["Date"].apply(lambda x: time_diff(x[7:].split(" "))).apply(lambda x: pd.to_timedelta(x[0], unit=x[1]))
+
+annonces["Date"] = vrai_date(annonces)
+
 # on plot les salaires
 plt.scatter(annonces.index.values,annonces['Salaires'],color='r')
 plt.title('Salaire (€ brut/an) ')
