@@ -80,6 +80,13 @@ annonces = annonces.drop(columns=["prem_exp"])
 type_poste =["directeur","directrice","manager","vp","svp","president","pdg","director","cto","chief","general manager","evp","executive","responsable région","chef","membre","board","direction","head","graduate","junior"]
 # on appelle str.extract qui va se charger de reconnaitre les items de la liste
 annonces['Seniority'] = annonces['Title'].str.extract("(" + "|".join(type_poste) +")", expand=False)
+# on crée une nouvelle variable "simplifiée" pour la visualisation
+executives =["chef",'cto','direction', 'executive','director',"manager",'directeur', 'head', 'chief','responsable région','vp']
+junior =["junior",'graduate','stage','intern','internship','assistant','student']
+annonces['Seniority_simplified']=annonces['Seniority'].str.extract("(" + "|".join(executives) +")", expand=False)
+annonces['Seniority_simplified']=annonces['Seniority_simplified'].replace(executives,"executives")
+annonces['Seniority_simplified'].loc[annonces['Seniority_simplified'].isnull()]=annonces['Seniority'].loc[annonces['Seniority_simplified'].isnull()].str.extract("(" + "|".join(junior) +")", expand=False)
+annonces['Seniority_simplified']=annonces['Seniority_simplified'].replace(junior,"junior")
 
 
 # Data preprocessing : Contrats
