@@ -41,6 +41,8 @@ tmp[0]=tmp[0].astype("float")
 tmp[0]=tmp[0].loc[tmp[0]<11]  
 tmp=tmp.groupby(level=0).max() #on garde la valeur maximum ()
 annonces['Experience'] = tmp.groupby(tmp.index.get_level_values(0)).agg(list) #on réinsere les groupes dans le dataframe
+annonces['Experience']=annonces['Experience'].astype(str).str.replace('\[|\]|\'', '') #on enleve les crochets
+
 
 #on converti les string en nan ou float
 def replace(l):
@@ -70,8 +72,8 @@ def prem_exp(df):
     temp.loc[vrai] = 1
     return temp
 
-annonces["prem_exp"] = prem_exp(df)
-annonces["Experience"] = np.nanmax(df[["prem_exp", "Experience"]], axis=1)
+annonces["prem_exp"] = prem_exp(annonces)
+annonces["Experience"] = np.nanmax(annonces[["prem_exp", "Experience"]], axis=1)
 annonces = annonces.drop(columns=["prem_exp"])
 
 # Data preprocessing : Type de poste
@@ -80,13 +82,6 @@ annonces = annonces.drop(columns=["prem_exp"])
 type_poste =["directeur","directrice","manager","vp","svp","president","pdg","director","cto","chief","general manager","evp","executive","responsable région","chef","membre","board","direction","head","graduate","junior"]
 # on appelle str.extract qui va se charger de reconnaitre les items de la liste
 annonces['Seniority'] = annonces['Title'].str.extract("(" + "|".join(type_poste) +")", expand=False)
-# on crée une nouvelle variable "simplifiée" pour la visualisation
-executives =["chef",'cto','direction', 'executive','director',"manager",'directeur', 'head', 'chief','responsable région','vp']
-junior =["junior",'graduate','stage','intern','internship','assistant','student']
-annonces['Seniority_simplified']=annonces['Seniority'].str.extract("(" + "|".join(executives) +")", expand=False)
-annonces['Seniority_simplified']=annonces['Seniority_simplified'].replace(executives,"executives")
-annonces['Seniority_simplified'].loc[annonces['Seniority_simplified'].isnull()]=annonces['Seniority'].loc[annonces['Seniority_simplified'].isnull()].str.extract("(" + "|".join(junior) +")", expand=False)
-annonces['Seniority_simplified']=annonces['Seniority_simplified'].replace(junior,"junior")
 
 
 # Data preprocessing : Contrats
@@ -282,4 +277,3 @@ annonces['Contrat']=annonces['Contrat'].astype(str).str.replace('\[|\]|\'', '')
 annonces["Niveau d'études"]=annonces["Niveau d'études"].astype(str).str.replace('\[|\]|\'', '')   
 annonces['Langages']=annonces['Langages'].astype(str).str.replace('\[|\]|\'', '')
 
-annonces['Experience']=annonces['Experience'].astype(str).str.replace('\[|\]|\'', '')
