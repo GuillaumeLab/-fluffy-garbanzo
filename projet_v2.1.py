@@ -241,6 +241,6 @@ plt.show()
 # enlever crochets dans les colonnes
 annonces['Contrat']=annonces['Contrat'].astype(str).str.replace('\[|\]|\'', '')
 annonces["Niveau d'études"]=annonces["Niveau d'études"].astype(str).str.replace('\[|\]|\'', '')   
-annonces['Languages']=annonces['Languages'].astype(str).str.replace('\[|\]|\'', '')
+annonces['Langages']=annonces['Langages'].astype(str).str.replace('\[|\]|\'', '')
 
 annonces['Experience']=annonces['Experience'].astype(str).str.replace('\[|\]|\'', '')
