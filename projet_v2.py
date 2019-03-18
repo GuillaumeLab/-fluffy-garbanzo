@@ -235,3 +235,18 @@ plt.title('Salaire (€ brut/an) ')
 plt.xlabel('index')
 plt.ylabel('Salaire')
 plt.show()
+
+#def Missing_values(data):
+data=annonces
+total = data.isnull().sum().sort_values(ascending=False)
+percent = (data.isnull().sum()/data.isnull().count()).sort_values(ascending=False)
+missing_data = pd.concat([total,percent], axis=1, keys=['Total', 'Pourcentage'])
+ #Affiche que les variables avec des na
+   
+#PercPlot=sns.barplot(x= missing_data.index, y=missing_data['Pourcentage'],palette='husl', rotation=45)
+#show.plot    
+# enlever crochets dans les colonnes
+annonces['Contrat']=annonces['Contrat'].astype(str).str.replace('\[|\]|\'', '')
+annonces["Niveau d'études"]=annonces["Niveau d'études"].astype(str).str.replace('\[|\]|\'', '')   
+annonces['Languages']=annonces['Languages'].astype(str).str.replace('\[|\]|\'', '')
+
