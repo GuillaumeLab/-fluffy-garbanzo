@@ -42,6 +42,17 @@ tmp[0]=tmp[0].loc[tmp[0]<11]
 tmp=tmp.groupby(level=0).max() #on garde la valeur maximum ()
 annonces['Experience'] = tmp.groupby(tmp.index.get_level_values(0)).agg(list) #on réinsere les groupes dans le dataframe
 
+# Fonction prem_exp - Une fonction qui peut aider à remplir la colonne "Experience".
+# Entrées: pd.DataFrame df
+# Actions: Rien
+# Sorties: pd.Series temp - une series avec le même index que df, dont les valeurs sont 1 si la colonne "Details" de df
+# contient "première" ou "first experience", ou 0 sinon.
+def prem_exp(df):
+    vrai = (df["Details"].str.contains("première", regex=True)) | (df["Details"].str.contains("first experience", regex=True))
+    temp = pd.Series(0, df.index)
+    temp.loc[vrai] = 1
+    return temp
+
 # Data preprocessing : Type de poste
 
 # on déclare une liste de mots clés pour recherche le type de poste dans annonces
