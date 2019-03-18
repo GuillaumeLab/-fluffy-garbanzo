@@ -35,7 +35,7 @@ annonces['Experience'] = annonces['Experience'].str.replace("une","1").replace("
 annonces['Experience'] = annonces['Experience'].str.replace("two","2").replace("three","3").replace("four","4").replace("five","5").replace("six","6").replace("seven","7").replace("eight","8").replace("nine","9").replace("ten","10").replace("fifteen","15")
 
 #  Regex pour prendre tous les digits avant 'year/years/ans/an ...'
-tmp = annonces['Experience'].str.extract("([0-9]+)(?=\s(an |ans |année |années |years |year |ans\r\n|années\r\n|année\r\n|an\r\n|year\r\n|years\r\n|ans,|année,|an,|années,|years,|year;|years;|ans;|an;|année;|années;|year.|years.|ans.|an.|année.|années.))", expand=False)
+tmp = annonces['Experience'].str.extractall("([0-9]+)(?=\s(an |ans |année |années |years |year |ans\r\n|années\r\n|année\r\n|an\r\n|year\r\n|years\r\n|ans,|année,|an,|années,|years,|year;|years;|ans;|an;|année;|années;|year.|years.|ans.|an.|année.|années.))", expand=False)
 tmp[0]=tmp[0].astype("float")
 # On elimine les valeurs suppérieures à 10 (hypothèse : les employeurs ne prennent pas plus de 11 ans d'expérience)
 tmp[0]=tmp[0].loc[tmp[0]<11]  
