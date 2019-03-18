@@ -49,9 +49,13 @@ annonces['Experience'] = tmp.groupby(tmp.index.get_level_values(0)).agg(list) #o
 # contient "première" ou "first experience", ou 0 sinon.
 def prem_exp(df):
     vrai = (df["Details"].str.contains("première", regex=True)) | (df["Details"].str.contains("first experience", regex=True))
-    temp = pd.Series(0, df.index)
+    temp = pd.Series(np.nan, df.index)
     temp.loc[vrai] = 1
     return temp
+
+annonces["prem_exp"] = prem_exp(df)
+annonces["Experience"] = np.nanmax(df[["prem_exp", "Experience"]], axis=1)
+annonces = annonces.drop(columns=["prem_exp"])
 
 # Data preprocessing : Type de poste
 
