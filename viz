@@ -1,0 +1,13 @@
+
+print(annonces["Salaires"].groupby(annonces["stage"]).mean())
+print(annonces["Salaires"].groupby(annonces["cdi"]).mean())
+print(annonces["Salaires"].groupby(annonces["cdd"]).mean())
+print(annonces["Salaires"].groupby(annonces["freelance"]).mean())
+
+
+annonces.groupby(['Inner_City',"Bassin"]).mean()['Salaires'].unstack().plot(kind="bar")
+plt.rcParams['figure.figsize'] = (10, 10)
+
+#Ce plot permet 
+annonces.groupby(['Seniority_simplified',"Bassin"]).mean()['Salaires'].unstack().plot(kind="bar")
+plt.rcParams['figure.figsize'] = (10, 10)
