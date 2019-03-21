@@ -263,6 +263,39 @@ annonces['langage'] = annonces['langage'].loc[annonces['langage']=="fr"]
 annonces['langage'] = annonces['langage'].notnull()
 annonces['langage'] *= 1
 
+#Création de la variable des postes 
+
+analyst = ["analyste","analyst","analytics","analyst","quantitative","quant","database","data base","base de donnée","base de données"]
+scientist = ["scientist","scientifique","ia","artificielle","artificial","math","économiste","statisticien","doctorant","statistique","r&d"]
+Business_Intelligence = ["businessintelligence","business intelligence","bi","crm","consultant","erp"]
+Developpeur = ["developpeur","devops","ingénieur","développeyur","software","développement","chercheur","java","engineer","dba","sql","ingenieur","informatique","développeur","dev","codeur","infrastructure","intégrateur","architect","integrateur"]
+
+annonces["position"]=annonces['Title'].str.extract("(" + "|".join(analyst) +")")
+annonces["position"]=annonces["position"].replace(analyst,"analyst")
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(scientist) +")", expand=False)
+annonces["position"]=annonces["position"].replace(scientist,"scientist")
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(Business_Intelligence) +")", expand=False)
+annonces["position"]=annonces["position"].replace(Business_Intelligence,"Business_Intelligence")
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(Developpeur) +")", expand=False)
+annonces["position"]=annonces["position"].replace(Developpeur,"Developpeur")
+
+analyst = ["analyste","analyst","analytics","analyst"]
+scientist = ["scientist","scientifique","artificial","math","économiste","statisticien","doctorant","statistique"]
+Business_Intelligence = ["businessintelligence","business intelligence","consultant"]
+Developpeur = ["developpeur","devops","ingénieur","développeyur","chercheur","java","engineer","ingenieur","développeur","infrastructure","intégrateur","architect","integrateur"]
+
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Details'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(analyst) +")", expand=False)
+annonces["position"]=annonces["position"].replace(analyst,"analyst")
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Details'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(scientist) +")", expand=False)
+annonces["position"]=annonces["position"].replace(scientist,"scientist")
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Details'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(Business_Intelligence) +")", expand=False)
+annonces["position"]=annonces["position"].replace(Business_Intelligence,"Business_Intelligence")
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Details'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(Developpeur) +")", expand=False)
+annonces["position"]=annonces["position"].replace(Developpeur,"Developpeur")
+
+annonces["Title"].loc[annonces["position"].isnull()]
+
+
 # Data preprocessing : Compétences 
 
 # on extrait les compétences spécifiques avec une regex
