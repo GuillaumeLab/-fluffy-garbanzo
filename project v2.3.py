@@ -1,4 +1,4 @@
-# Scraping Indeed
+
 
 # Importation des librairies
 import pandas as pd
@@ -11,7 +11,7 @@ plt.rcParams['figure.figsize'] = (15, 3)
 plt.rcParams['font.family'] = 'sans-serif'
 
 # Importation du dataframe
-annonces = pd.read_csv('df_pymongo.csv',encoding='utf-8')
+annonces = pd.read_csv('C:/Users/Administrateur/Documents/SIMPLONr/df_pymongo.csv',encoding='utf-8')
 
 # Suppression de colonnes inutiles
 annonces.drop(['index','estimated','linked','_id'], axis=1, inplace=True)
@@ -228,9 +228,13 @@ def intify_etc(sals):
                     sals[i] = avg
                 else:
                     #print('not fourchette')
-                    sal = re.findall(regex,sals[i])[0]
-                    sal=sal.replace(' ','')#get rid of space
-                    sals[i] = int(sal)#convert to int
+                    try:
+                        sal = re.findall(regex,sals[i])[0]
+                        sal=sal.replace(' ','')#get rid of space
+                        sals[i] = int(sal)#convert to int
+                    except:
+                        print("WARNING "+str(sals[i]))
+                        sals[i]=np.nan
             elif 'par mois' in sals[i]:
                 #print('par mois')
                 if '-' in sals[i]:
@@ -244,9 +248,14 @@ def intify_etc(sals):
                     sals[i] = par_an
                 else:
                     #print('not fourchette')
-                    sal = re.findall(regex,sals[i])[0]
-                    sal = sal.replace(' ','')#get rid of space
-                    sals[i] = int(sal)*12#convert to yearly salary
+                    try:
+                        sal = re.findall(regex,sals[i])[0]
+                        sal=sal.replace(' ','')#get rid of space
+                        sals[i] = int(sal)*12#convert to yearly salary
+                    except:
+                        print("WARNING "+str(sals[i]))
+                        sals[i]=np.nan
+                    #print('not fourchette')
         elif type(sals[i]) == str:
             sals[i] = np.nan
     return sals
@@ -313,13 +322,13 @@ def try_detect(cell):# fonction pour detecter la langue
     return detected_lang
 
 # ça a pris 3 minutes pour 7000 lignes
-annonces['French'] = annonces["Details"].apply(try_detect) # applique la fonction 
-annonces['French'].loc[annonces['French']=="fr"].count()  #nombre d'offre en français
+annonces['langage'] = annonces["Details"].apply(try_detect) # applique la fonction 
+annonces['langage'].loc[annonces['langage']=="fr"].count()  #nombre d'offre en français
 
 #binarize en fr et non fr
-annonces['French'] = annonces['French'].loc[annonces['langage']=="fr"] 
-annonces['French'] = annonces['French'].notnull()
-annonces['French'] *= 1
+annonces['langage'] = annonces['langage'].loc[annonces['langage']=="fr"] 
+annonces['langage'] = annonces['langage'].notnull()
+annonces['langage'] *= 1
 
 # Data preprocessing : Compétences 
 
