@@ -11,7 +11,7 @@ plt.rcParams['figure.figsize'] = (15, 3)
 plt.rcParams['font.family'] = 'sans-serif'
 
 # Importation du dataframe
-annonces = pd.read_csv('C:/Users/Administrateur/Documents/SIMPLONr/df_pymongo(1).csv',encoding='utf-8')
+annonces = pd.read_csv('df_pymongo.csv',encoding='utf-8')
 
 # Suppression de colonnes inutiles
 annonces.drop(['index','estimated','linked','_id'], axis=1, inplace=True)
