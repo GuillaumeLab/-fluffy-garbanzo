@@ -288,10 +288,8 @@ annonces["Niveau d'études"] = niveau_etudes(annonces)
 annonces["Niveau d'études"]=annonces["Niveau d'études"].astype(str).str.replace("master","5").replace("bac","").replace("+","")
 listetude = ["1","2","3","4","5","6","7","8"]
 
-annonces["study"] = annonces["Niveau d'études"].astype(str).str.extract("(" + "|".join(listetude) +")", expand=False)
-
-
-
+multi_index_study = annonces["Niveau d'études"].astype(str).str.extractall("(" + "|".join(listetude) +")")
+annonces["Niveau d'études"]=multi_index_study.groupby(level=0).max()
 
 # Data preprocessing : Location
 
