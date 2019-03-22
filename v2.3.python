@@ -275,6 +275,14 @@ def niveau_etudes(df):
 
 # on appelle la fonction qui traite le niveau d'études
 annonces["Niveau d'études"] = niveau_etudes(annonces)
+# on clean la colonne niveau d'étude
+annonces["Niveau d'études"]=annonces["Niveau d'études"].astype(str).str.replace("master","5").replace("bac","").replace("+","")
+listetude = ["1","2","3","4","5","6","7","8"]
+
+annonces["study"] = annonces["Niveau d'études"].astype(str).str.extract("(" + "|".join(listetude) +")", expand=False)
+
+
+
 
 # Data preprocessing : Location
 
