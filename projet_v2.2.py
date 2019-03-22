@@ -11,7 +11,7 @@ plt.rcParams['figure.figsize'] = (15, 3)
 plt.rcParams['font.family'] = 'sans-serif'
 
 # Importation du dataframe
-annonces = pd.read_csv('C:/Users/Administrateur/Documents/SIMPLONr/df_pymongo2.csv',encoding='utf-8')
+annonces = pd.read_csv('C:/Users/Administrateur/Documents/SIMPLONr/df_pymongo.csv',encoding='utf-8')
 
 # Suppression de colonnes inutiles
 annonces.drop(['index','estimated','linked','_id'], axis=1, inplace=True)
@@ -129,28 +129,33 @@ for i in range(len(annonces['salary'])):
             #now we must separate per months from per year 
             #and fourchettes from non fourchettes
             if '-' in annonces['salary'][i]:
-                    annonces['salary'][i]=re.sub(r'(\d)\s+(\d)', r'\1\2', annonces['salary'][i])
-                    #print(re.findall(regex,sals[i]))
-                    frm = re.findall(regex,annonces['salary'][i])[0]
-                    to = re.findall(regex,annonces['salary'][i])[1]
-                    #print(to)
-                    #print(frm)
-                    frm, to = frm.replace(' ',''), to.replace(' ','')#getting rid of space
-                    frm, to = int(frm), int(to)#convert to int 
-                    avg = (frm+to)/2 #calculate average
-                    annonces['salary'][i] = avg
+                    try: 
+                        annonces['salary'][i]=re.sub(r'(\d)\s+(\d)', r'\1\2', annonces['salary'][i])
+                        #print(re.findall(regex,sals[i]))
+                        frm = re.findall(regex,annonces['salary'][i])[0]
+                        to = re.findall(regex,annonces['salary'][i])[1]
+                        #print(to)
+                        #print(frm)
+                        frm, to = frm.replace(' ',''), to.replace(' ','')#getting rid of space
+                        frm, to = int(frm), int(to)#convert to int 
+                        avg = (frm+to)/2 #calculate average
+                        annonces['salary'][i] = avg
+                    except:
+                        annonces['salary'][i] = "WARNING"+str(annonces['salary'][i])  
             elif 'à' in annonces['salary'][i]:
-                    annonces['salary'][i]=re.sub(r'(\d)\,+(\d)', r'\1\2', annonces['salary'][i])
-                    annonces['salary'][i]=re.sub(r'(\d)\s+(\d)', r'\1\2', annonces['salary'][i])
-                    #print(re.findall(regex,sals[i]))
-                    frm = re.findall(regex,annonces['salary'][i])[0]
-                    to = re.findall(regex,annonces['salary'][i])[1]
-                    #print(to)
-                    #print(frm)
-                    frm, to = frm.replace(' ',''), to.replace(' ','')#getting rid of space
-                    frm, to = int(frm), int(to)#convert to int 
-                    avg = (frm+to)/2 #calculate average
-                    annonces['salary'][i] = avg
+                    try: 
+                        annonces['salary'][i]=re.sub(r'(\d)\s+(\d)', r'\1\2', annonces['salary'][i])
+                        #print(re.findall(regex,sals[i]))
+                        frm = re.findall(regex,annonces['salary'][i])[0]
+                        to = re.findall(regex,annonces['salary'][i])[1]
+                        #print(to)
+                        #print(frm)
+                        frm, to = frm.replace(' ',''), to.replace(' ','')#getting rid of space
+                        frm, to = int(frm), int(to)#convert to int 
+                        avg = (frm+to)/2 #calculate average
+                        annonces['salary'][i] = avg
+                    except:
+                        annonces['salary'][i] = "WARNING"+str(annonces['salary'][i])
             elif 'par' in annonces['salary'][i]:
                     annonces['salary'][i]=re.sub(r'(\d)\,+(\d)', r'\1\2', annonces['salary'][i])
                     annonces['salary'][i]=re.sub(r'(\d)\s+(\d)', r'\1\2', annonces['salary'][i])
