@@ -313,13 +313,13 @@ def try_detect(cell):# fonction pour detecter la langue
     return detected_lang
 
 # ça a pris 3 minutes pour 7000 lignes
-annonces['langage'] = annonces["Details"].apply(try_detect) # applique la fonction 
-annonces['langage'].loc[annonces['langage']=="fr"].count()  #nombre d'offre en français
+annonces['French'] = annonces["Details"].apply(try_detect) # applique la fonction 
+annonces['French'].loc[annonces['French']=="fr"].count()  #nombre d'offre en français
 
 #binarize en fr et non fr
-annonces['langage'] = annonces['langage'].loc[annonces['langage']=="fr"] 
-annonces['langage'] = annonces['langage'].notnull()
-annonces['langage'] *= 1
+annonces['French'] = annonces['French'].loc[annonces['langage']=="fr"] 
+annonces['French'] = annonces['French'].notnull()
+annonces['French'] *= 1
 
 # Data preprocessing : Compétences 
 
