@@ -23,6 +23,12 @@ annonces = annonces[annonces["timestamp"].notna()]
 annonces["timestamp"] = pd.to_datetime(annonces["timestamp"],infer_datetime_format=True)
 annonces = annonces.reset_index()
 
+# Fonction vraie_date - Une fonction qui donne la vraie date de publication
+# d'une offre d'emploi en prenant une ligne d'un df dont la
+# colonne "Date" est en forme "Il y a..." et qui a une colonne "timestamp"
+# Entrées: pd.DataFrame df
+# Actions: Rien
+# Sorties: pd.Series - une colonne avec le même nombre de lignes que df
 def vraie_date(df):
     
     # Première fonction pour trouver l'unité de temps après "il y a"
@@ -100,12 +106,14 @@ annonces['Seniority_simplified']=annonces['Seniority_simplified'].replace(junior
 
 #Création de la variable des postes 
 
-analyst = ["analyste","analyst","analytics","analyst","quantitative","quant","database","data","data base","base de donnée","base de données"]
-scientist = ["scientist","sciences","science","scientifique","ia","artificielle","artificial","math","économiste","statisticien","doctorant","statistique","r&d"]
+#Création des listes de postes analyste, scientist,bi,dev,architect
+analyst = ["analyste","analyst","analytics","analyst","quantitative","quant","data","data base"]
+scientist = ["scientist","sciences","science","scientifique","ia","artificielle","artificial","math","économiste","statisticien","doctorant","statistique","r&d","chercheur"]
 Business_Intelligence = ["businessintelligence","business intelligence","bi","crm","consultant","erp"]
-Developpeur = ["developpeur","devops","ingénieur","développeyur","software","développement","chercheur","java","engineer","dba","sql","ingenieur","informatique","développeur","dev","codeur","infrastructure","intégrateur","architect","integrateur"]
+Developpeur = ["developpeur","devops","ingénieur","développeyur","software","développement","java","engineer","ingenieur","développeur","dev","codeur","intégrateur","integrateur"]
+IT_architect = ["dba","sql","informatique","infrastructure","architect","architect","database","data base","base de donnée","base de données"]
 
-
+#Création d'une colonne spécifique extractant info des titres basé sur les listes de postes
 annonces["position"]=annonces['Title'].str.extract("(" + "|".join(analyst) +")")
 annonces["position"]=annonces["position"].replace(analyst,"analyst")
 annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(scientist) +")", expand=False)
@@ -114,12 +122,16 @@ annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[an
 annonces["position"]=annonces["position"].replace(Business_Intelligence,"Business_Intelligence")
 annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(Developpeur) +")", expand=False)
 annonces["position"]=annonces["position"].replace(Developpeur,"Developpeur")
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(IT_architect) +")", expand=False)
+annonces["position"]=annonces["position"].replace(IT_architect,"IT_architect")
 
+#recréation de nouvelles listes pour extraire info des details lorsque le titre était insuffisant. "bi" serait inadapté pour l'extraction dans la colonne details
 analyst = ["analyste","analyst","analytics","analyst"]
 scientist = ["scientist","scientifique","artificial","math","économiste","statisticien","doctorant","statistique"]
 Business_Intelligence = ["businessintelligence","business intelligence","consultant"]
 Developpeur = ["developpeur","devops","ingénieur","développeyur","chercheur","java","engineer","ingenieur","développeur","infrastructure","intégrateur","architect","integrateur"]
 
+#Completion d'une colonne spécifique extractant info des details basés sur les nouvelles listes de postes
 annonces["position"].loc[annonces["position"].isnull()]=annonces['Details'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(analyst) +")", expand=False)
 annonces["position"]=annonces["position"].replace(analyst,"analyst")
 annonces["position"].loc[annonces["position"].isnull()]=annonces['Details'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(scientist) +")", expand=False)
