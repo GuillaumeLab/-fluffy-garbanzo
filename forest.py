@@ -61,3 +61,9 @@ regressor.summary
 corr = X.corr()
 
 ###HOW TO EVALUATE DIS?
+from sklearn import metrics
+print(metrics.r2_score(y_test, y_pred))
+print(metrics.mean_absolute_error(y_test, y_pred))
+print(metrics.mean_squared_error(y_test, y_pred))
+print(metrics.median_absolute_error(y_test, y_pred))
+print(metrics.explained_variance_score(y_test, y_pred))
