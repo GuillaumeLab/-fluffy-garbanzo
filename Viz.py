@@ -1,5 +1,4 @@
 
-#plot le nombre de cdd, cdi, etc
 cols = ["stage", "cdi", "cdd", "alternance", "freelance"]
 results_set = [annonces["Bassin_emploi"].loc[annonces[col]=="1"].count() for col in cols]
 df = pd.DataFrame({'results_set': results_set}, index=cols)
@@ -15,10 +14,11 @@ ax1.set_title('Nombre de compétences relevées')
 
 #plot les salaires selon les compétences
 cols = ['c+', 'c++', 'cassandra', 'd3', 'dashboard', 'dataiku', 'deeplearning', 'excel', 'hadoop', 'java', 'javascript', 'keras', 'kpi', 'machinelearning', 'maths', 'matlab', 'ml', 'mysql', 'nlp', 'nosql', 'numpy', 'pandas', 'php', 'physics', 'physique', 'powerpoint', 'python', 'pytorch', 'qlikview', 'r', 'rstudio', 'ruby', 'sas', 'scala', 'sci-kit', 'scikit', 'shiny', 'spark', 'sql', 'statistics', 'statistique', 'tensorflow', 'vba']
-results_set2 = [annonces["Salaires"].loc[annonces[col]==1].mean() for col in cols]
-df = pd.DataFrame({'results_set2': results_set2}, index=cols)
+results_set3 = [annonces["Salaires"].loc[annonces[col]==1].mean() for col in cols]
+df = pd.DataFrame({'results_set2': results_set3}, index=cols)
 ax2 = df.plot.bar(rot=90)
 ax2.set_title('Salaires associés à chaque compétence (moyenne)')
+
 
 #plot les salaires banlieu vs centre ville
 annonces.groupby(['Inner_City',"Bassin_emploi"]).mean()['Salaires'].unstack().plot(kind="bar",title="les salaires selon la localité centre villes vs banlieu")
@@ -33,7 +33,7 @@ annonces.groupby(['position',"Bassin_emploi"]).mean()['Salaires'].unstack().plot
 plt.rcParams['figure.figsize'] = (10, 10)
 
 #vertical
-f, (ax3, ax4,ax6) = plt.subplots(3)
+f, (ax3, ax4,ax6) = plt.subplots(3,figsize=(16,16))
 sns.set(style="darkgrid")
 ax3 =sns.countplot(ax=ax3,x="Bassin_emploi", hue="Niveau d'études", data=annonces)
 ax3.set_title('niveau etude')
@@ -44,7 +44,7 @@ ax6.set_title('nombre de poste selon le rôle et la ville')#Paris has a lot more
 
 
 #Or horizontale
-fig, axs = plt.subplots(ncols=3,figsize=(16,10))
+fig, axs = plt.subplots(ncols=3,figsize=(16,16))
 sns.countplot(x='Bassin_emploi', hue="Niveau d'études", data=annonces, ax=axs[0])
 sns.countplot(x='position', data=annonces, ax=axs[1])
 sns.countplot(x='Bassin_emploi', hue='position', data=annonces, ax=axs[2])
