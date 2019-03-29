@@ -48,3 +48,10 @@ fig, axs = plt.subplots(ncols=3,figsize=(16,16))
 sns.countplot(x='Bassin_emploi', hue="Niveau d'études", data=annonces, ax=axs[0])
 sns.countplot(x='position', data=annonces, ax=axs[1])
 sns.countplot(x='Bassin_emploi', hue='position', data=annonces, ax=axs[2])
+
+
+#Or Courbe selon la date réelle 
+annonces.groupby(['true_date',"position"]).count()['Details'].unstack().plot(title="Number of offer")
+plt.rcParams['figure.figsize'] = (20, 10)
+annonces.groupby(['true_date',"Bassin_emploi"]).count()['Details'].unstack().plot(title="Number of offer")
+plt.rcParams['figure.figsize'] = (20, 10)
