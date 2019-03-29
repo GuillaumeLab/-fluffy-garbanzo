@@ -63,6 +63,8 @@ classifier.fit(X_train, y_train)
 
 y_pred = classifier.predict(X_test)
 
+from sklearn import metrics
+
 print(metrics.r2_score(y_test, y_pred))#-0.0473397092158
 print(metrics.mean_absolute_error(y_test, y_pred))#7853.55989583
 print(metrics.mean_squared_error(y_test, y_pred))#157532208.216
