@@ -1,4 +1,7 @@
 
+import seaborn as sns
+sns.set(style="darkgrid")
+
 cols = ["stage", "cdi", "cdd", "alternance", "freelance"]
 results_set = [annonces["Bassin_emploi"].loc[annonces[col]=="1"].count() for col in cols]
 df = pd.DataFrame({'results_set': results_set}, index=cols)
@@ -50,8 +53,7 @@ sns.countplot(x='position', data=annonces, ax=axs[1])
 sns.countplot(x='Bassin_emploi', hue='position', data=annonces, ax=axs[2])
 
 
-#Or Courbe selon la date réelle 
-annonces.groupby(['true_date',"position"]).count()['Details'].unstack().plot(title="Number of offer")
+annonces.groupby(['true_date',"position"]).count()['Details'].unstack().plot(title="Number of offer per role")
 plt.rcParams['figure.figsize'] = (20, 10)
-annonces.groupby(['true_date',"Bassin_emploi"]).count()['Details'].unstack().plot(title="Number of offer")
+annonces.groupby(['true_date',"Bassin_emploi"]).count()['Details'].unstack().plot(title="Number of offer per city")
 plt.rcParams['figure.figsize'] = (20, 10)
