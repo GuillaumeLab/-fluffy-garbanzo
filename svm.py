@@ -34,12 +34,15 @@ df["Experience"]=df["Experience"].astype(float)
 for i in df["Seniority_simplified"].unique():
     df["Experience"].loc[df["Seniority_simplified"]==i] = df["Experience"].fillna(df["Experience"].loc[df["Seniority_simplified"]==i].mean())
 
+#encoding    
 df = pd.get_dummies(df)
-    
+
+#getting rid of useless columns 
 df = df.drop(["study_nan","study_1.0","study_8.0"], axis=1)
 col_dict = {x: col for x, col in enumerate(df.columns)} 
 df = df.drop(col_dict[29], 1)
 
+#extracting only cols with salaries
 dfnona = df.dropna()
 X = dfnona.iloc[:, 1:]
 y = dfnona[["Salaires"]]
