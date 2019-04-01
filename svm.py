@@ -14,9 +14,7 @@ df = pd.read_csv("/Users/Celia/Documents/simplon/MachineLearning/projet_indeed/d
 df = df[["Salaires","Experience","stage","cdi","cdd","freelance","alternance","Bassin_emploi","study","langage","Seniority","Seniority_simplified"]]
 
 
-df['study'] = df['study'].astype(str)
-df = df.drop(df.index[8])#empty line
-df = df.drop(df.index[4])#empty line 
+df['study'] = df['study'].astype(str) 
 df['Bassin_emploi'][9] = 'Paris' # Je remplace un 'ile de france' avec paris (reperé a la main)
 #df = df.dropna(how='all')# drops rows with only nans 
 
