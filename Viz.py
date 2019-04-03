@@ -2,11 +2,13 @@
 import seaborn as sns
 sns.set(style="darkgrid")
 
-#cols = ["stage", "cdi", "cdd", "alternance", "freelance"]
-#results_set = [annonces["Bassin_emploi"].loc[annonces[col]=="1"].count() for col in cols]
-#df = pd.DataFrame({'results_set': results_set}, index=cols)
-#ax=df.plot.bar(rot=0)
-#ax.set_title('Nombre de contrat parmis les offres relevées')
+cols = ["stage", "cdi", "cdd", "alternance", "freelance"]
+results_set = [annonces["Details"].loc[annonces[col]==1].count() for col in cols]
+df = pd.DataFrame({'results_set': results_set}, index=cols)
+ax=df.plot.bar(rot=90,figsize = (15, 15))
+ax.set_title('Nombre de contrat parmis les offres relevées')
+fig = ax.get_figure()   
+fig.savefig('skills_count.png')
 
 #plot le nombre de compétences
 cols = ['c+', 'cassandra', 'd3', 'dashboard', 'dataiku', 'deeplearning', 'excel', 'hadoop', 'java', 'javascript', 'keras', 'kpi', 'machinelearning', 'maths', 'matlab', 'ml', 'mysql', 'nlp', 'nosql', 'numpy', 'pandas', 'php', 'physics', 'physique', 'powerpoint', 'python', 'pytorch', 'qlikview', 'r', 'rstudio', 'ruby', 'sas', 'scala', 'sci-kit', 'scikit', 'shiny', 'spark', 'sql', 'statistics', 'statistique', 'tensorflow', 'vba']
