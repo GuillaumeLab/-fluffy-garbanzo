@@ -22,7 +22,7 @@ df.columns = cols
 df = df[["Salaires","Experience","stage","cdi","cdd","freelance","alternance",
          "Bassin_emploi","Niveau etudes","langage","Seniority","Seniority_simplified","position",
          'python','java','javascript','c+','scala']]
-#add in position !!!
+
 #Je converti la colonne niveau d'étude en string pour pouvoir l'encoder
 df['Niveau etudes'] = df['Niveau etudes'].astype(str)
 #df = df.drop(df.index[8])#empty line
@@ -80,8 +80,6 @@ corr = X.corr()
 
 ###HOW TO EVALUATE DIS?
 from sklearn import metrics
-
-from sklearn.cross_validation import GridSearchCV
 print(metrics.r2_score(y_test, y_pred))
 print(metrics.mean_absolute_error(y_test, y_pred))
 print(metrics.mean_squared_error(y_test, y_pred))
