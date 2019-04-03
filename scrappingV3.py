@@ -1,5 +1,5 @@
 """
-Ce code permet de scrapper le site cible en utilisant urllib, selenium et beautiful soup
+Ce code permet de scrapper le site cible en utilisant selenium
 Il est toujours en développement. L'idée est de l'optimiser et de construire des classes. Nous venons de changer la méthoe de scraping en utilisant urllib et beautifulsoup 
 """
 
