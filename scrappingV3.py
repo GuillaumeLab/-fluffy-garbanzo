@@ -220,7 +220,8 @@ def scraping_jobpost(i,choice,pages2,website,browser,keywords,skills,thread_id):
     df_counter.loc[thread_id]=[thread_id,count]
     df_counter.to_csv('df_counter.csv', index=False, header=True)
     try:
-        if db.new_indeed_hope.find_one({'DetailsLoc': DetailsLoc})==None:
+        if db.new_indeed_hope.find_one({'DetailsLoc': DetailsLoc})==None: #check si Details loc existe déjà dans la base
+            #si elle n'existe pas, la ligne est ajoutée
             db.new_indeed_hope.insert_one({"Title":Title,"Details":Details,"linked":linked,"Company":Company,"Location":Location,"estimated":estimated,"Date":Date,"timestamp":timestamp,"DetailsLoc":DetailsLoc,"url":url});
     except:
         print("could not upload data or already there")
