@@ -1,0 +1,120 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Apr  3 15:07:20 2019
+
+@author: Administrateur
+"""
+
+import numpy as np
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns; sns.set()
+import datetime
+from matplotlib import pyplot
+#plt.figure(1,figsize=(10,10))
+plt.figure(figsize=(10,10))
+
+df = pd.read_csv("df_pymongo_merged_with_companies.csv")
+
+#------------------------------------------------------------------------
+# boxplot bassin_emploi et Salaires
+a4_dims = (12, 12)
+fig, ax = pyplot.subplots(figsize=a4_dims)
+# graphes salaire par rapport aux villes
+df_salaire_ville=df[['Salaires','Bassin_emploi']]
+#df['Salaires'].boxplot(df['Bassin_emploi'],grid=False, rot=45, fontsize=15)
+ax = sns.boxplot(x=df['Bassin_emploi'], y=df['Salaires'], data=df)
+ax.axes.set_title("Salaire/Ville",fontsize=15)
+ax.set_xlabel("Bassin_emploi",fontsize=15)
+ax.set_ylabel("Salaires",fontsize=15)
+ax.tick_params(labelsize=15)
+#sns.plt.show()
+
+plt.savefig("Salaire_Bassin_Emploi.png")
+plt.close()
+#---------------------------------------------------------------
+# boxplot Niveau d'étude et Salaires
+a4_dims = (12, 12)
+fig, ax = pyplot.subplots(figsize=a4_dims)
+ax = sns.boxplot(x=df["Niveau d'études"], y=df['Salaires'], data=df)
+ax.axes.set_title("Salaire/Niveau d'étude",fontsize=15)
+ax.set_xlabel("Niveau d'étude",fontsize=15)
+ax.set_ylabel("Salaires",fontsize=15)
+ax.tick_params(labelsize=15)
+
+plt.savefig("Niveau_Etude_Salaire.png")
+plt.close()
+
+#--------------------------------------------------------------------------------
+# Experience et Salaires
+a4_dims = (12, 12)
+fig, ax = pyplot.subplots(figsize=a4_dims)
+df['Experience']=round(df['Experience'],2)
+ax = sns.boxplot(x=df['Experience'], y=df['Salaires'], data=df)
+ax.set_xticklabels(ax.get_xticklabels(),rotation=30)
+ax.axes.set_title("Salaire/Experience",fontsize=15)
+ax.set_xlabel("Experience",fontsize=15)
+ax.set_ylabel("Salaires",fontsize=15)
+ax.tick_params(labelsize=15)
+
+plt.savefig("Salaire_Experience.png")
+plt.close()
+#--------------------------------------------------------------------------------
+# correlation chiffre d'affaire et Salaire
+import scipy.stats as stats
+a4_dims = (12, 12)
+fig, ax = pyplot.subplots(figsize=a4_dims)
+j=sns.jointplot(data=df, x='Salaires', y='Chiffre', kind='reg', color='g', height=12,size=15)
+j.annotate(stats.pearsonr, fontsize=18)
+ax.axes.set_title("Salaire/Chiffre",fontsize=25)
+#ax.set_xlabel("Chiffre",fontsize=20)
+#ax.set_ylabel("Salaires",fontsize=20)
+#ax.tick_params(labelsize=15)
+plt.xlabel('Chiffre', fontsize=18)
+plt.ylabel('Salaires', fontsize=18)
+plt.tick_params(axis="both", labelsize=18)
+#plt.legend(fontsize=20)
+#plt.show()
+
+plt.savefig("Salair_Chiffre.png")
+plt.close()
+# --------------------------------------------------------------------------------
+# degouper la colonne contrat
+def ungroup_delim(col, delim=','):
+    """Split elements délimités avec une virgule dans la colonne considérée, stacking columnwise"""
+    return col.str.split(delim, expand=True).stack()
+# Apply the ungrouping function, and forward fill elements that aren't grouped.
+#ungrouped = annonces['Contrat'].apply(ungroup_delim).ffill()
+ungrouped_contrat=ungroup_delim(df['Contrat'], delim=',')
+# Drop la colonne des indexes.
+Contrat_ungroup = ungrouped_contrat.reset_index(drop=True)
+
+# remplcer certains elements
+
+Contrat_ungroup = Contrat_ungroup.replace(to_replace =['full time','full-time','permanent',' cdi'], value = 'cdi', regex = True) 
+Contrat_ungroup = Contrat_ungroup.replace(to_replace =['short term','short-term',' cdd'], value = 'cdd', regex = True) 
+# replace the matching strings 
+Contrat_ungroup = Contrat_ungroup.replace(to_replace =['internship',' stage'], value = 'stage', regex = True) 
+
+Contrat_ungroup= Contrat_ungroup.replace(to_replace =['apprentissage','professionnalisation',' alternance'], value = 'alternance', regex = True) 
+
+Contrat_ungroup = Contrat_ungroup.replace(to_replace =['freelance','independent','independant',' indépendant'], value = 'indépendant', regex = True) 
+Contrat_ungroup = Contrat_ungroup.replace(to_replace =['part time',' part-time'], value = 'part-time', regex = True) 
+
+Contrat_ungroup = Contrat_ungroup.replace(to_replace = ['contract', 'contracts',' contract', ' contracts','student',' student'], value = np.nan) 
+#----------------------------------------------------------------------------------
+
+# Contrat et Salaires
+a4_dims = (12, 12)
+fig, ax = pyplot.subplots(figsize=a4_dims)
+ax = sns.boxplot(x=Contrat_ungroup, y=df['Salaires'], data=df)
+ax.set_xticklabels(ax.get_xticklabels(),rotation=45)
+ax.axes.set_title("Salaire/Contrat",fontsize=15)
+ax.set_xlabel("Contrat",fontsize=15)
+ax.set_ylabel("Salaires",fontsize=15)
+ax.tick_params(labelsize=15)
+
+
+plt.savefig("Contrat_Salaire.png")
+plt.close()
