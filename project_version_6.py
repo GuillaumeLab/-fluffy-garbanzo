@@ -123,8 +123,8 @@ analyst = ["analyste","analyst","analytics","analyst","quantitative","quant ","�
 scientist = ["scientist","sciences","science","scientifique","scien","math","économiste","statisticien","statistique","r&d","chercheur"]
 Business_Intelligence = ["businessintelligence","business intelligence"," bi "]
 Developpeur = ["developpeur","devops","ingénieur","développeyur","software","développement","java","engineer","ingenieur","développeur","dev ","codeur","intégrateur","integrateur"]
-IT_architect = ["dba","sql","informatique","infrastructure","architect","architect","intégrateur","architect","integrateur","database","data base","base de donnée","base de données"]
-data_engineer = ["data"]
+IT_architect = ["cloud","dba","sql","informatique","infrastructure","architect","architect","intégrateur","architect","integrateur","database","data base","base de donnée","base de données"]
+data_engineer = ["data","données","donnee","donnees"]
 
 
 #Création d'une colonne spécifique extractant info des titres basé sur les listes de postes
@@ -138,6 +138,9 @@ annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[an
 annonces["position"]=annonces["position"].replace(Developpeur,"Developpeur")
 annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(IT_architect) +")", expand=False)
 annonces["position"]=annonces["position"].replace(IT_architect,"IT_architect")
+annonces["position"].loc[annonces["position"].isnull()]=annonces['Title'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(data_engineer) +")", expand=False)
+annonces["position"]=annonces["position"].replace(data_engineer,"data_engineer")
+
 
 #recréation de nouvelles listes pour extraire info des details lorsque le titre était insuffisant. "bi" serait inadapté pour l'extraction dans la colonne details
 analyst = ["analyste","analyst","analytics","analyst"]
@@ -155,7 +158,7 @@ annonces["position"]=annonces["position"].replace(Business_Intelligence,"Busines
 annonces["position"].loc[annonces["position"].isnull()]=annonces['Details'].loc[annonces["position"].isnull()].str.extract("(" + "|".join(Developpeur) +")", expand=False)
 annonces["position"]=annonces["position"].replace(Developpeur,"Developpeur")
 
-annonces["Title"].loc[annonces["position"].isnull()]
+
 
 # Data preprocessing : Expérience
 
