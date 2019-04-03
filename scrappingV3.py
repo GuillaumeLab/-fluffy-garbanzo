@@ -203,7 +203,7 @@ def scraping_jobpost(i,choice,pages2,website,browser,keywords,skills,thread_id):
         pass 
     try:
         Details = browser.find_element_by_xpath('//*[@id="vjs-content"]').text
-        Details=Details.split('\nil y a ')[0]
+        Details=Details.split('\nil y a ')[0] #on enlève les dates de parution de l'annonce présent dans "Details"
     except:
         print("could not fetch role description")
         Details = np.nan
@@ -227,7 +227,7 @@ def scraping_jobpost(i,choice,pages2,website,browser,keywords,skills,thread_id):
     print("counter"+str(scraping_jobpost.counter))
     #df_indeed.loc[thread_number]=[Title,Details]
     scraping_jobpost.counter += 1 
-    #browser.back()
+
 
 
 
