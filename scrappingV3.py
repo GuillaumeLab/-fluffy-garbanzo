@@ -1,7 +1,6 @@
 """
-Ce code permet de scrapper le site. Il prend une on 
-
-
+Ce code permet de scrapper le site cible en utilisant urllib, selenium et beautiful soup
+Il est toujours en développement. L'idée est de l'optimiser et de construire des classes. Nous venons de changer la méthoe de scraping en utilisant urllib et beautifulsoup 
 """
 
 
@@ -18,12 +17,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 import datetime
 import numpy as np
 client = MongoClient('localhost') #importe local host de mongodb
-db = client.new_indeed_raw # connection à la table JobPosting
-new_indeed_raw = db.new_indeed_raw 
-#browser = webdriver.Firefox() # ouverture de la fenêtre selenium 
-keyword='"Python " OR "SQL" OR Matlab OR R OR SPSS OR powerBI OR ggplot OR ggvis OR stata OR minitab OR "power BI"'
+db = client.new_indeed_raw # connection à la table 
+new_indeed_hope = db.new_indeed_hope 
+
+keyword='aws or apache or hortonworks or talend or teradata or mariadb or postgres'
 keywords = keyword
-city = ["Lyon","Toulouse","Nantes","Bordeaux","Paris"]
+city = ["Lyon","Toulouse","Nantes","Bordeaux","Paris"] #définition de la liste de ville cible
 estimated = ""
 count=0
 df_counter = pd.read_csv('C:/Users/Administrateur/Documents/SIMPLONr/df_counter.csv', sep=',', encoding='utf-8' )
@@ -44,37 +43,44 @@ def generate_delay():
 
 time.sleep(generate_delay())
 time.sleep(generate_delay())
-timestamp = datetime.datetime.today().strftime('%Y-%m-%d')
+timestamp = datetime.datetime.today().strftime('%Y-%m-%d')  #définition du timestamp qui sera utilisé dans le jour du scraping
 import time
 from random import choice as rchoice
 import random
 import pandas as pd 
+#Définition du dataframe
 df_indeed = pd.DataFrame({'Title' : [],'Details' : [],'Link' : [],'Company' : [],'Location' : [],'Estimated Salary' : [],'date' : [],'timestamp' : [],'detailslocconcat' : [],"url": []})
 
 
 
  
 #Def de la fonction pour écrire le texte dans le field recherche
+"""Entrée: la fonction prend 3 paramètres en entrée:
+    Parameter choice: il s'agit de la ville. La fonction utilise la ville lors de la déclaration du website
+    Parameter count : le compteur va déclencher la fonction switch_city à partir de l'incrémentation 89
+    Parameter page2 :  le compteur utilise la variable page2, qui sera incrémentée 
+    Action : Cette fonction sert à choisir la page de recherche
+    Output : changement de la page de recherche. Déclenchement de la fonction city_switch sur la 90ème page 
+    """
 def pagination(choice,count,pages2,website,browser,keywords,skills,thread_id):
     """Input
     Parameter:
     Parameter:
     Output
     """
-    pagination.counter += 1
-    print("counter pagination!"+str(pagination.counter))
-    pages2 = "&start="+str(count)+"0"
-    #website = "https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2)
+    pagination.counter += 1 #incrémentation du compteur de la fonction
+    print("counter pagination!"+str(pagination.counter)) 
+    pages2 = "&start="+str(count)+"0"    # page output
     print("my count var is "+str(count))
 
     current = browser.current_window_handle
     multi_window = browser.window_handles
     for window in multi_window:
-        if window != current:
-            browser.switch_to.window(window)
-            browser.close()
+        if window != current: #regarde si une nouvelle fenetre est ouvert
+            browser.switch_to.window(window)  #va sur l'autre fenêtre ouverte
+            browser.close() #ferme cette fenêtre
             browser.switch_to.window(current)
-    while count<90:
+    while count<90: #si le compteur est > 90, il changera de ville
         count += 1
         try:
             browser.get(website)
@@ -90,41 +96,39 @@ def pagination(choice,count,pages2,website,browser,keywords,skills,thread_id):
 
 
 def randomize_click(choice,count,website,browser,keywords,skills,thread_id):
-    """Input : this function takes count as an input. It opens a link taking pages2 as an input
-    Parameter:
-    Parameter:
-    Output : 
+"""Entrée: la fonction prend 2 paramètres en entrée:
+    Parameter choice: il s'agit de la ville. La fonction utilise la ville lors de la déclaration du website
+    Parameter count : la fonction prend le paramètre count [mais ne l'utilise pas ]
+    
+    Action : Cette fonction sert à choisir aléatoirement le lien sur lequel cliquer pour reproduire le comportement d'un humain 
+    Output : la fonction va renvoyer la variable i qui sera utilisée lors du scraping 
     """
     pages2 = "&start="+str(count)+"0"
     website = "https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2)
     browser.get(website)
-    links = browser.find_elements_by_class_name('jobtitle')
+    links = browser.find_elements_by_class_name('jobtitle')  #définit la liste d'élements
     randompage = [len(links)]#randompage is a random number to state the number
     number = [i for i in range(random.choice(randompage))] #number also decide of the number of iterations
     #linkswith_duplicates = browser.find_elements_by_xpath("//a[%s]" % condition)
     for i in range(len(links)):
         while number != []:
             choice_num = random.choice(number)#choice_num prend un le nom d'une numbre entre 0 et 15 pour éviter d'ouvrir les pages l'une après l'autre
-            number.remove(choice_num)
-            i = choice_num
+            number.remove(choice_num) #enlève ce numéro de la liste
+            i = choice_num 
             scraping_jobpost(i,choice,pages2,website,browser,keywords,skills,thread_id)
-            #except:
-                 #print('error on something undefined')
-                 #browser.back()
-                 #time.sleep(generate_delay())
-                 #pass
-                
-        #browser.get("https://www.indeed.fr/emplois?q=%22Intelligence+Artificielle%22+OR+DATA+OR+IA+OR+AI"+str(choice))
+            
         pagination(choice,count,pages2,website,browser,keywords,skills,thread_id)
 
 
 
 
 def switch_city(count,website,browser,keywords,skills,thread_id):
-    """Input
-    Parameter:
-    Parameter:
-    Output
+"""Entrée: la fonction prend 3 paramètres en entrée:
+    Parameter choice: il s'agit de la ville. La fonction utilise la ville lors de la déclaration du website
+    Parameter count : le compteur va déclencher la fonction switch_city à partir de l'incrémentation 89
+    Parameter page2 :  le compteur utilise la variable page2, qui sera incrémentée 
+    Action : Cette fonction sert à choisir la page de recherche
+    Output : changement de la page de recherche. Déclenchement de la fonction city_switch sur la 90ème page 
     """
     #count = 1 #reset the var count to 0
     keywords = keyword
@@ -136,11 +140,12 @@ def switch_city(count,website,browser,keywords,skills,thread_id):
 
 #Def de la fonction scraping
 def scraping_jobpost(i,choice,pages2,website,browser,keywords,skills,thread_id):
-    """Input
-    Parameter:
-    Parameter:
-    Output
-    """ 
+"""Entrée: la fonction prend 3 paramètres en entrée:
+    Parameter choice: il s'agit de la ville. La fonction utilise la ville lors de la déclaration du website
+    Parameter i : le numéro aléatoire du lien défini dans la fonction randomize click 
+    Parameter page2 :  le compteur utilise la variable page2, qui sera incrémentée 
+    Action : Cette fonction sert à scraper l'information et à ajouter les données dans la base de données, si l'info n'est pas présente
+    """
     website = "https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2)
     browser.set_window_size("3024", "3024")
     links = browser.find_elements_by_class_name('jobtitle')
@@ -215,8 +220,8 @@ def scraping_jobpost(i,choice,pages2,website,browser,keywords,skills,thread_id):
     df_counter.loc[thread_id]=[thread_id,count]
     df_counter.to_csv('df_counter.csv', index=False, header=True)
     try:
-        if db.new_indeed_raw.find_one({'DetailsLoc': DetailsLoc})==None:
-            db.new_indeed_raw.insert_one({"Title":Title,"Details":Details,"linked":linked,"Company":Company,"Location":Location,"estimated":estimated,"Date":Date,"timestamp":timestamp,"DetailsLoc":DetailsLoc,"url":url});
+        if db.new_indeed_hope.find_one({'DetailsLoc': DetailsLoc})==None:
+            db.new_indeed_hope.insert_one({"Title":Title,"Details":Details,"linked":linked,"Company":Company,"Location":Location,"estimated":estimated,"Date":Date,"timestamp":timestamp,"DetailsLoc":DetailsLoc,"url":url});
     except:
         print("could not upload data or already there")
     print("counter"+str(scraping_jobpost.counter))
@@ -227,88 +232,22 @@ def scraping_jobpost(i,choice,pages2,website,browser,keywords,skills,thread_id):
 
 
 
-def set_up_counters():
-    """Input
-    Parameter:
-    Parameter:
-    Output
-    """ 
-    pagination.counter = 0
-    scraping_jobpost.counter = 0
-    #pages2 = "&start="+str(pagination.counter)+"0"
-    website = "https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2)
-    randomize_click(choice,count)
-
-
+#Cette fonction va permettre de lancer plusieurs Thread. Elle prend thread id en argument.
 def f(thread_id):    
-    #thread will either acquire lock or wait for it to be released by other thread
-    #init this driver
-    browser = webdriver.Firefox()
-    skills= ["title:(donnée or données or Database or dba or databases or cloud or aws or dynamics or azur)",'scala OR "Machine Learning" OR "deep learning" OR Hadoop OR Spark OR NLP OR NoSQL OR MongoDB','(title:("business intelligence")) OR Ruby OR VBA OR hive OR mysql OR php OR "c++"','javascript OR angular OR bootstraps OR css OR java','"Python " OR "SQL" OR Matlab OR R OR SPSS OR powerBI OR ggplot OR ggvis OR stata OR minitab OR "power BI"']
-    browser.get('https://www.indeed.fr/')
-    browser.maximize_window()
+    browser = webdriver.Firefox()  #attente que l'instance selenium s'ouvre
+    browser.get('https://www.indeed.fr/')#va sur Indeed
+    browser.maximize_window()#Mode plein écran
     print(thread_id)
-    pagination.counter = 0
-    scraping_jobpost.counter = 0
-    paused = 0
-    if paused ==0:
-        df_counter = pd.DataFrame({'thread' : [],'Page_count' : []})
-        count=0
-    elif paused ==1:
-        df_counter = pd.read_csv('C:/Users/Administrateur/Documents/SIMPLONr/df_counter.csv', sep=',', encoding='utf-8' )
-        count = df_counter["Page_count"].loc[df_counter["Page_count"]==thread_id]
+    pagination.counter = 0  #nombre de fois que la fonction pagination a tourné
+    scraping_jobpost.counter = 0  #nombre de fois que la fonction scrapping a tourné
+    df_counter = pd.DataFrame({'thread' : [],'Page_count' : []})
+    count=0  #ce compteur permettra de changer la ville après 90 pages. Il permet aussi de savoir quel est le compte de page.
     choice = random.choice(city)#choice prend un le nom d'une ville dans la liste de villes 
     city.remove(choice)# efface la ville selectionnée de la liste
     
     pages2 = "&start="+str(count)+"0"
     website = "https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2)
     randomize_click(choice,count,website,browser,keywords,skills,thread_id)
-import pandas as pd 
-
-def f2():    
-    #thread will either acquire lock or wait for it to be released by other thread
-    #init this driver
-    browser = webdriver.Firefox()
-    browser.get('https://www.indeed.fr/')
-    browser.maximize_window()
-    pagination.counter = 0
-    scraping_jobpost.counter = 0
-    choice = random.choice(city2)#choice prend un le nom d'une ville dans la liste de villes 
-    city2.remove(choice)# efface la ville selectionnée de la liste
-    pages2 = "&start="+str(count)+"0"
-    website = "https://www.indeed.fr/emplois?q="+str(keyword)+str(estimated)+"&l="+str(choice)+str(pages2)
-    randomize_click(choice,count,website,browser,keywords)
-    pass
-
-    #do your other stuff
-    #browser.close()
-
-#thread1 = threading.Thread(target=f(1))
-#thread2 = threading.Thread(target=f(2))
-#thread3 = threading.Thread(target=f(3))
-#thread4 = threading.Thread(target=f(4))
-#thread5 = threading.Thread(target=f(5))
-#thread6 = threading.Thread(target=f2)
-#thread7 = threading.Thread(target=f2)
-#thread8 = threading.Thread(target=f2)
-#thread9 = threading.Thread(target=f2)
-#thread10 = threading.Thread(target=f2)
-#thread1.start()
-#time.sleep(generate_delay())
-#thread2.start()
-#time.sleep(generate_delay())
-#thread3.start()
-#time.sleep(generate_delay())
-#thread4.start()
-#time.sleep(generate_delay())
-#thread5.start()
-#
-#thread1.join()
-#thread2.join()
-#thread3.join()
-#thread4.join()
-#thread5.join()
-
 
 threads = []
 for i in range(5):
@@ -316,25 +255,5 @@ for i in range(5):
     threads.append(t)
     t.start()
 
-#time.sleep(generate_delay())
-#thread6.start()
-#time.sleep(generate_delay())
-#thread7.start()
-#time.sleep(generate_delay())
-#thread8.start()
-#time.sleep(generate_delay())
-#thread9.start()
-#time.sleep(generate_delay())
-#thread10.start()
-
-city = ["Lyon","Toulouse","Nantes","Bordeaux","Paris"]
-city2 = ["Lyon","Toulouse","Nantes","Bordeaux","Paris"]
-
-#condition = " or ".join("contains(@href, '%s')" % word for word in words)
-
-#estimated = " €40%C2%A0000"
-
-actions = ActionChains(browser)
 
 
-#set_up_counters()
