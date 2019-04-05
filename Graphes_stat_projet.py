@@ -13,6 +13,9 @@ import seaborn as sns; sns.set()
 import datetime
 from matplotlib import pyplot
 #plt.figure(1,figsize=(10,10))
+
+sns.set_style("whitegrid", {'axes.grid' : False})
+
 plt.figure(figsize=(10,10))
 
 df = pd.read_csv("df_pymongo_merged_with_companies.csv")
@@ -43,7 +46,7 @@ ax.set_xlabel("Niveau d'étude",fontsize=15)
 ax.set_ylabel("Salaires",fontsize=15)
 ax.tick_params(labelsize=15)
 
-plt.savefig("Niveau_Etude_Salaire.png")
+fig.savefig("Niveau_Etude_Salaire.pdf", format="pdf", bbox_inches="tight", transparent=True, pad_inches=0)
 plt.close()
 
 #--------------------------------------------------------------------------------
@@ -58,27 +61,29 @@ ax.set_xlabel("Experience",fontsize=15)
 ax.set_ylabel("Salaires",fontsize=15)
 ax.tick_params(labelsize=15)
 
-plt.savefig("Salaire_Experience.png")
+fig.savefig("Salaire_Experience.pdf", format="pdf", bbox_inches="tight", transparent=True, pad_inches=0)
 plt.close()
 #--------------------------------------------------------------------------------
 # correlation chiffre d'affaire et Salaire
 import scipy.stats as stats
 a4_dims = (12, 12)
 fig, ax = pyplot.subplots(figsize=a4_dims)
-j=sns.jointplot(data=df, x='Salaires', y='Chiffre', kind='reg', color='g', height=12,size=15)
+#df["log Chiffre"] = np.log(df["Chiffre"])
+j=sns.jointplot(data=df, x='Salaires', y="Chiffre", kind='reg', color='g', height=12,size=15)
+j.set_title("Scatterplot et Histogrammes des Salaires avec les Chiffres d'Affaires des Entreprises")
 j.annotate(stats.pearsonr, fontsize=18)
-ax.axes.set_title("Salaire/Chiffre",fontsize=25)
+#ax.axes.set_title("Salaire/Chiffre",fontsize=25)
 #ax.set_xlabel("Chiffre",fontsize=20)
 #ax.set_ylabel("Salaires",fontsize=20)
 #ax.tick_params(labelsize=15)
-plt.xlabel('Chiffre', fontsize=18)
-plt.ylabel('Salaires', fontsize=18)
-plt.tick_params(axis="both", labelsize=18)
+#ax.xlabel('Salaires', fontsize=18)
+#ax.ylabel("Chiffre d'Affaires", fontsize=18)
+#ax.tick_params(axis="both", labelsize=18)
 #plt.legend(fontsize=20)
 #plt.show()
 
-plt.savefig("Salair_Chiffre.png")
-plt.close()
+j.savefig("Salair_Chiffre.pdf", format="pdf", bbox_inches="tight", transparent=True, pad_inches=0)
+#plt.close()
 # --------------------------------------------------------------------------------
 # degouper la colonne contrat
 def ungroup_delim(col, delim=','):
@@ -116,5 +121,5 @@ ax.set_ylabel("Salaires",fontsize=15)
 ax.tick_params(labelsize=15)
 
 
-plt.savefig("Contrat_Salaire.png")
+fig.savefig("Contrat_Salaire.pdf", format="pdf", bbox_inches="tight", transparent=True, pad_inches=0)
 plt.close()
