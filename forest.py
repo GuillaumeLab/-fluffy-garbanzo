@@ -80,10 +80,10 @@ corr = X.corr()
 
 ###HOW TO EVALUATE DIS?
 from sklearn import metrics
-print(metrics.r2_score(y_test, y_pred))
-print(metrics.mean_absolute_error(y_test, y_pred))
+print(metrics.r2_score(y_test, y_pred))#0.494598561047
+print(metrics.mean_absolute_error(y_test, y_pred))#6244.65764726
 print(metrics.mean_squared_error(y_test, y_pred))
-print(metrics.median_absolute_error(y_test, y_pred))
+print(metrics.median_absolute_error(y_test, y_pred)) #3898.52380952
 print(metrics.explained_variance_score(y_test, y_pred))
 
     
